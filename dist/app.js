@@ -6,15 +6,6 @@ if (!reduceMotion.matches && 'IntersectionObserver' in window) {
   }, { threshold: .08 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
-const menu = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.header nav');
-function closeMenu() { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.setAttribute('aria-label', 'Open navigation'); }
-menu.addEventListener('click', () => {
-  const open = nav.classList.toggle('open');
-  menu.setAttribute('aria-expanded', String(open)); menu.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-});
-nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 const services = [...document.querySelectorAll('.service')];
 services.forEach(service => service.addEventListener('toggle', () => {
   if (service.open) services.forEach(other => { if (other !== service) other.open = false; });
