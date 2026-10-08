@@ -1,8 +1,3 @@
-if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
-  document.body.classList.add('js-motion');
-  const observer = new IntersectionObserver(entries => entries.forEach(entry => { if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);} }),{threshold:.05});
-  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-}
 let selected='all';
 const filters=[...document.querySelectorAll('.filter-button')];
 const items=[...document.querySelectorAll('.filter-item')];

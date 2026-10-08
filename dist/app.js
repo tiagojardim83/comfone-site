@@ -1,11 +1,3 @@
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-if (!reduceMotion.matches && 'IntersectionObserver' in window) {
-  document.body.classList.add('js-motion');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
-  }, { threshold: .08 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}
 const services = [...document.querySelectorAll('.service')];
 services.forEach(service => service.addEventListener('toggle', () => {
   if (service.open) services.forEach(other => { if (other !== service) other.open = false; });

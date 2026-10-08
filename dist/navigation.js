@@ -2,11 +2,30 @@ const header = document.querySelector('.full-nav');
 const triggers = [...header.querySelectorAll('.nav-trigger')];
 const nav = header.querySelector('nav');
 const menu = header.querySelector('.menu-toggle');
+const hoverDesktop = matchMedia('(min-width: 1101px) and (hover: hover) and (pointer: fine)');
+let closeTimer;
+function openGroup(trigger) {
+  clearTimeout(closeTimer); closeGroups(trigger);
+  trigger.setAttribute('aria-expanded', 'true');
+  document.getElementById(trigger.getAttribute('aria-controls')).hidden = false;
+}
+triggers.forEach(trigger => {
+  const group = trigger.closest('.nav-group');
+  group.addEventListener('pointerenter', () => { if (hoverDesktop.matches) openGroup(trigger); });
+  group.addEventListener('pointerleave', () => {
+    if (hoverDesktop.matches) closeTimer = setTimeout(() => {
+      if (!group.matches(':hover') && !group.contains(document.activeElement)) closeGroups();
+    }, 180);
+  });
+  trigger.addEventListener('focus', () => { if (hoverDesktop.matches) openGroup(trigger); });
+});
+nav.querySelectorAll(':scope > a').forEach(a => a.addEventListener('pointerenter', () => { if (hoverDesktop.matches) closeGroups(); }));
 function closeGroups(except) {
   triggers.forEach(t => { if (t !== except) { t.setAttribute('aria-expanded', 'false'); document.getElementById(t.getAttribute('aria-controls')).hidden = true; } });
 }
-function closeNavigation() { closeGroups(); nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.setAttribute('aria-label','Open navigation'); }
+function closeNavigation() { clearTimeout(closeTimer); closeGroups(); nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.setAttribute('aria-label','Open navigation'); }
 triggers.forEach(t => t.addEventListener('click', () => {
+  if (hoverDesktop.matches && t.matches(':hover')) { openGroup(t); return; }
   const open = t.getAttribute('aria-expanded') !== 'true';
   closeGroups(t); t.setAttribute('aria-expanded', String(open)); document.getElementById(t.getAttribute('aria-controls')).hidden = !open;
 }));
